@@ -34,29 +34,6 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-// Button Scrolling
-btnScrollTo.addEventListener('click', function (e) {
-  const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords); // to get the coordinates and other properties of the section
-  console.log(e.target.getBoundingClientRect()); // e.target is the button, so we get its position related to the viewport whenever clicked, top, left values get changed.
-  console.log('Current scroll (X/Y)', scrollX, scrollY); // these values are in px
-  // y coord is the distance between the button and the top of the viewport
-  console.log('height/width viewport', document.documentElement.clientHeight, document.documentElement.clientWidth); // to see the results, try changing the console box width.
-
-  // window.scrollTo(s1coords.left + window.pageXOffset, s1coords.top + window.pageYOffset);
-  // adding current scroll amount to coords because .top and .left are relative to the entire page.
-
-  // implementing the above, but passing as an object for smooth scroll (but old school way)
-  /*   window.scrollTo({
-    left: s1coords.left + window.pageXOffset,
-    top: s1coords.top + window.pageYOffset,
-    behavior: 'smooth',
-  }); */
-
-  // latest and best way
-  section1.scrollIntoView({ behavior: 'smooth' });
-});
-
 // Page Navigation
 document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
@@ -131,14 +108,16 @@ const headerObserver = new IntersectionObserver(
 headerObserver.observe(header);
 
 // Reveal Sections
+
 const allSections = document.querySelectorAll('.section');
 const revealSection = function (entries, observer) {
-  const [entry] = entries;
-  console.log(entry);
+  console.log(entries);
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
 
-  if (!entry.isIntersecting) return;
-  entry.target.classList.remove('section--hidden');
-  observer.unobserve(entry.target);
+    entry.target.classList.remove('section--hidden');
+    observer.unobserve(entry.target);
+  });
 };
 
 const sectionObserver = new IntersectionObserver(revealSection, {
