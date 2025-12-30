@@ -109,11 +109,49 @@ nav.addEventListener('mouseover', handleHover.bind(0.5)); // mouseenter cant bub
 nav.addEventListener('mouseout', handleHover.bind(1)); // to undo what we do on hover, we use this to apply when mouse is moved away
 
 // Sticky Navigation
-const initialCoords = section1.getBoundingClientRect();
-console.log(initialCoords);
 
-window.addEventListener('scroll', function () {
-  console.log(window.scrollY); // this is the position from the top of the viewport to the top of the original page
-  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+// const initialCoords = section1.getBoundingClientRect();
+// console.log(initialCoords);
+
+// window.addEventListener('scroll', function () {
+//   console.log(window.scrollY); // this is the position from the top of the viewport to the top of the original page
+//   if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// });
+
+// Sticky Navigation : Intersection Observer API
+
+// const obsCallback = function (entires, observer) {
+//   entires.forEach((entry) => console.log(entry));
+// };
+
+// const obsOptions = {
+//   root: null, // as we are interested in the entire viewport
+//   threshold: [0, 0.2], // 0 means the callback is called when threshold is passed when moving in and out of the view
+//   // threshold of 1 means, the callback fn is only called when 100% of the target is visible in the viewport. which isnt possible in this case
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+console.log(navHeight);
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  console.log(entry);
+  if (entry.isIntersecting === false) nav.classList.add('sticky');
   else nav.classList.remove('sticky');
-});
+};
+
+const headerObserver = new IntersectionObserver(
+  stickyNav,
+  {
+    root: null,
+    threshold: 0,
+    rootMargin: `-${navHeight}px`, // header gets height of nav as margin at the end. unit only in px, no %.
+  } // when 0% of header is visible, we want something to happen
+);
+
+headerObserver.observe(header);
