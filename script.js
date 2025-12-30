@@ -1,8 +1,5 @@
 // 'use strict';
 
-// ///////////////////////////////////////
-// // Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
@@ -14,6 +11,7 @@ const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
 const nav = document.querySelector('.nav');
 
+// Modal window
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove('hidden');
@@ -35,8 +33,6 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
-
-// ///////////////////////////////////////
 
 // Button Scrolling
 btnScrollTo.addEventListener('click', function (e) {
@@ -61,23 +57,7 @@ btnScrollTo.addEventListener('click', function (e) {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
-// ///////////////////////////////////////
 // Page Navigation
-
-// document.querySelectorAll('.nav__link').forEach(function (el) {
-//   el.addEventListener('click', function (e) {
-//     e.preventDefault();
-//     const id = this.getAttribute('href');
-//     console.log(id);
-//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-//     // if we had 10000 elements, creating this same function again and again may impact performance
-//   });
-// });
-
-// Event Delegation
-// 1. Add event listener to common parent element
-// 2. Determine what element originaed the event
-
 document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
   console.log(e.target);
@@ -127,3 +107,13 @@ const handleHover = function (e) {
 // Passing "argument" into handler
 nav.addEventListener('mouseover', handleHover.bind(0.5)); // mouseenter cant bubble, so we use mouseover here
 nav.addEventListener('mouseout', handleHover.bind(1)); // to undo what we do on hover, we use this to apply when mouse is moved away
+
+// Sticky Navigation
+const initialCoords = section1.getBoundingClientRect();
+console.log(initialCoords);
+
+window.addEventListener('scroll', function () {
+  console.log(window.scrollY); // this is the position from the top of the viewport to the top of the original page
+  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
